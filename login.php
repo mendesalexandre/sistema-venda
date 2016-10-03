@@ -5,26 +5,7 @@ require './lib/funcoes.php';
 require './lib/conexao.php';
 
 if($_POST){
-    $email = $_POST['email'];
-    
-    $senha = $_POST['senha'];
-    $senha = md5('0409'.$senha);
-    
-    $mysqli = "select idusuario, nome from usuario
-        where (senha = '$senha') and (email = '$email')";
-    
-    $consulta = mysqli_query($con, $mysqli);
-    $resultado = mysqli_fetch_assoc($consulta);
-    
-    if($resultado){
-        session_start();
-        $_SESSION['logado']= 1;
-        $_SESSION['nome'] = $resultado['nome'];
-        $_SESSION['idusuario'] = $resultado['idusuario'];
 
-        header('location:index.php');
-        exit;
-    }
 }
 
 ?>

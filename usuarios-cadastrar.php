@@ -49,7 +49,6 @@ if ($_POST) {
     }
     
     if (!$msg) {
-        $senha = md5('0409' . $senha);
         $sql = "Insert Into usuario (nome,email,senha,status) Values ('$nome', '$email', '$senha', $status)";
 
         $resultado = mysqli_query($con, $sql);

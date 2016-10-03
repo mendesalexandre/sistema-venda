@@ -5,40 +5,6 @@ require './config.php';
 require './lib/funcoes.php';
 require './lib/conexao.php';
 
-$periodo = (int) $_GET['periodo'];
-
-$sql = 'Select
-v.idvenda,
-c.idcliente,
-v.data vendaData,
-c.nome cliente,
-vi.preco,
-vi.precopago,
-vi.qtd
-From venda v
-Inner Join cliente c
-On c.idCliente = v.idCliente
-Inner Join vendaitem vi
-On vi.idvenda = v.idvenda';
-
-// Where
-$where = array();
-$where[] = "(v.status = '" . VENDA_FECHADA . "')";
-
-# http://php.net/manual/en/function.strtotime.php
-# http://php.net/manual/en/datetime.formats.relative.php
-// $periodo = 1;
-// $where[] = "(v.data >='" . date('Y-m-d', $periodo) . "')";
-
-
-$sql .= "\nWhere ".join(' and ',$where);
-
-// Group By
-
-echo '<pre>' . $sql . '</pre>';
-
-exit;
-
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -72,21 +38,14 @@ exit;
       </tr>
     </thead>
     <tbody>
-        <?php
-        $consulta = mysqli_query($con,$sql);
-        while($resultado = mysqli_fetch_assoc($consulta)){
-          $vendaData = strtotime($resultado['data']);
-          $vendaDifValores = 0;
-      ?>
       <tr>
-        <td><?php echo $resultado['idvenda']; ?></td>
-        <td><?php echo $resultado['clienteNome']; ?></td>
-        <td><?php echo $vendaData; ?></td>
-        <td>R$ <?php echo number_format($resultado['valorVenda'], 2, ",", "."); ?></td>
-        <td>R$ <?php echo number_format($resultado['valorPago'], 2, ",", "."); ?></td>
-        <td>R$ <?php echo number_format($vendaDifValores, 2, ",", "."); ?></td>
+        <td>{{IDVENDA}}</td>
+        <td>{{CLIENTE_NOME}}</td>
+        <td>{{VENDA_DATA}}</td>
+        <td>{{VENDA_VALOR}}</td>
+        <td>{{VENDA_VALOR_PAGO}}</td>
+        <td>{{DIFERENCA}}</td>
       </tr>
-        <?php } ?>
     </tbody>
   </table>
 </div>

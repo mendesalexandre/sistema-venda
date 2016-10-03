@@ -8,34 +8,6 @@ require './lib/conexao.php';
 $msgOk = array();
 $msgAviso = array();
 
-if (!isset($_GET['idvenda'])) {
-  header('location:vendas.php');
-  exit;
-}
-
-$idvenda = (int) $_GET['idvenda'];
-
-$sql = "Select
-	v.idvenda,
-	v.data,
-	c.nome clienteNome,
-	u.nome usuarioNome
-From venda v
-Inner Join cliente c
-	On (c.idcliente = v.idcliente)
-Inner Join usuario u
-	On (u.idusuario = v.idusuario)
-Where
-    (v.idvenda = $idvenda)
-    And (v.status = " . VENDA_FECHADA . ")";
-$consulta = mysqli_query($con, $sql);
-$venda = mysqli_fetch_assoc($consulta);
-
-if (!$venda) {
-  header('location:vendas.php');
-  exit;
-}
-
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -53,7 +25,7 @@ if (!$venda) {
 <div class="container">
 
 <div class="page-header">
-  <h1><i class="fa fa-shopping-cart"></i> Detalhes da venda #<?php echo $idvenda; ?></h1>
+  <h1><i class="fa fa-shopping-cart"></i> Detalhes da venda #{{IDVENDA}}</h1>
 </div>
 
 <?php if ($msgOk) { msgHtml($msgOk, 'success'); } ?>
@@ -74,37 +46,19 @@ if (!$venda) {
       </tr>
     </thead>
     <tbody>
-        <?php
-        $sql = "Select
-	v.idproduto,
-	p.produto,
-	v.precopago,
-	v.qtd
-From vendaitem v
-Inner Join produto p
-	On (p.idproduto = v.idproduto)
-Where (v.idvenda = $idvenda)";
-        $consulta = mysqli_query($con, $sql);
-        
-        $vendaTotal = 0;
-        
-        while($produto = mysqli_fetch_assoc($consulta)) {
-            $total = $produto['qtd'] * $produto['precopago'];
-            $vendaTotal += $total;
-        ?>
+
       <tr>
-        <td><?php echo $produto['qtd']; ?></td>
-        <td><?php echo $produto['produto']; ?></td>
-        <td>R$ <?php echo number_format($produto['precopago'], 2, ',', '.'); ?></td>
-        <td>R$ <?php echo number_format($total, 2, ',', '.'); ?></td>
+        <td>{{QTD}}</td>
+        <td>{{PRODUTO}}</td>
+        <td>{{PRECO_PAGO}}</td>
+        <td>{{TOTAL}}</td>
       </tr>
-        <?php } ?>
     </tbody>
     <tfoot>
       <tr>
         <th></th>
         <th colspan="2">Total da venda</th>
-        <th>R$ <?php echo number_format($vendaTotal, 2, ',', '.'); ?></th>
+        <th>{{VENDA_TOTAL}}</th>
       </tr>
     </tfoot>
   </table>
@@ -121,36 +75,36 @@ Where (v.idvenda = $idvenda)";
     <div class="form-group">
       <label for="fcliente" class="col-sm-2 control-label">Código:</label>
       <div class="col-sm-2">
-        <p class="form-control-static"><?php echo $idvenda; ?></p>
+        <p class="form-control-static">{{IDVENDA}}</p>
       </div>
       
       <label for="fcliente" class="col-sm-2 control-label">Data:</label>
       <div class="col-sm-2">
-          <p class="form-control-static"><?php echo date('d/m/Y', strtotime($venda['data'])); ?></p>
+          <p class="form-control-static">{{DATA}}</p>
       </div>
       
       <label for="fcliente" class="col-sm-2 control-label">Total:</label>
       <div class="col-sm-2">
-        <p class="form-control-static">R$ <?php echo number_format($vendaTotal, 2, ',', '.'); ?></p>
+        <p class="form-control-static">{{VENDA_TOTAL}}</p>
       </div>
     </div>
     
     <div class="form-group">
       <label for="fcliente" class="col-sm-2 control-label">Cliente:</label>
       <div class="col-sm-4">
-        <p class="form-control-static"><?php echo $venda['clienteNome']; ?></p>
+        <p class="form-control-static">{{CLIENTE_NOME}}</p>
       </div>
       
       <label for="fcliente" class="col-sm-2 control-label">CPF:</label>
       <div class="col-sm-4">
-        <p class="form-control-static">{{CPF do cliente}}</p>
+        <p class="form-control-static">{{CPF}}</p>
       </div>
     </div>
     
     <div class="form-group">
       <label for="fcliente" class="col-sm-2 control-label">Vendedor:</label>
       <div class="col-sm-4">
-        <p class="form-control-static"><?php echo $venda['usuarioNome']; ?></p>
+        <p class="form-control-static">{{USUARIO_NOME}}</p>
       </div>
     </div>
     
